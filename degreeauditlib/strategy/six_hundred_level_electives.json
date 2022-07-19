@@ -1,0 +1,4 @@
+{
+  "name": "six_hundred_level_electives",
+  "query": "(select case when count() >= {min_600_level_courses} then \"True\" else \"False\" end from grades where \"student id\" = students.\"student id\" and grade in (\"A+\",\"A\",\"A-\",\"B+\",\"B\",\"B-\",\"C+\",\"C\") and course not in ({required_course}) and cast(substr(course,-3,3) as integer) > 600) as \"{name}\""
+}

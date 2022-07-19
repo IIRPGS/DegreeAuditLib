@@ -1,0 +1,4 @@
+{
+  "name": "OneCStrategy",
+  "query": "ifnull((select case when count(*) > 0 then 'False' else 'True' end\nfrom grades\nwhere Grade = 'C'\nand \"Student ID\" = students.\"Student ID\"\ngroup by \"Student ID\"\nhaving count(*) = 1), 'True') as \"{name}\""
+}

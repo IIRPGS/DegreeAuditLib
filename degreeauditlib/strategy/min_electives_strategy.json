@@ -1,0 +1,4 @@
+{
+  "name": "MinElectivesStrategy",
+  "query": "(select case when count() > {min_electives} then \"True\" else \"False\" end from grades where \"student id\" = students.\"student id\" and grade in (\"A+\",\"A\",\"A-\",\"B+\",\"B\",\"B-\",\"C+\",\"C\") and course not in ({r})) as \"{name}\""
+}

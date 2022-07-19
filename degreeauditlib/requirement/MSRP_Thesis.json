@@ -1,0 +1,17 @@
+{
+  "name": "Master of Science in Restorative Practices Education Specialization",
+  "required_courses": [
+    "'RP 500','RP 504'",
+    "'RP 525'",
+    "'RP 610'",
+    "'RP 699'"
+  ],
+  "required_electives": [
+    "'RP 680'",
+    "'RP 685'",
+    "'RP 707'"
+  ],
+  "min_electives": 4,
+  "one_c": true,
+  "multi_c": true
+}
