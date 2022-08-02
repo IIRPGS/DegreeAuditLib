@@ -82,5 +82,5 @@ def create_tables(conn: Connection, excel_file: str) -> None:
     :return: None
     """
     all_data = pd.read_excel(excel_file, index_col=14)
-    create_table(conn, all_data.loc[:, ['Name', 'Last Term', 'Total Credits', ]], 'students')
+    create_table(conn, all_data.loc[:, ['Name', 'Last Term', 'Total Credits', 'Course in Progress', ]], 'students')
     create_table(conn, create_grade_data(all_data), 'grades')
