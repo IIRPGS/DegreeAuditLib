@@ -9,19 +9,24 @@ Home of the Auditor class.
 """
 
 
+def query_columns(parts: list[str]) -> str:
+    return '"' + '",\n"'.join(parts) + '"'
+
+
 class Auditor:
     """
     The Auditor class creates and executes a query which indicates the status of student(s) degree progress.
     """
 
-    def __init__(self, cur: Cursor, degree_requirements_file: str, student_filter: str = None):
+    def __init__(self, cur: Cursor, degree_requirements_file: str, student_filter: str = None,
+                 student_columns: list[str] = ["student id", "name", "last term", "total credits", 'Course in Progress']):
         """
         Initializes the object
         :param cur: Cursor used to execute queries against database
         :param degree_requirements_file:  Path to the requirement JSON file
         :param student_filter: criteria for filtering data from students table (not grades)
         """
-        self.__query_begin = 'select "student id", "name", "last term", "total credits", \n'
+        self.__query_begin = f'select {query_columns(student_columns)},\n'
         self.__query_end_base = 'from students'
         self.__query_end_optional = f' where {student_filter}' if student_filter else ''
 

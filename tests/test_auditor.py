@@ -29,8 +29,8 @@ def database() -> Connection:
 
     create_table(conn, df, 'Grades')
 
-    df = pd.DataFrame([(12116, 'Joe Schmoe', 'Spring 2022', '27'), ],
-                      columns=['Student ID', 'Name', 'Last Term', 'Total Credits', ])
+    df = pd.DataFrame([(12116, 'Joe Schmoe', 'Spring 2022', '27','RP 699.01'), ],
+                      columns=['Student ID', 'Name', 'Last Term', 'Total Credits', 'Course in Progress', ])
     df.set_index('Student ID')
 
     create_table(conn, df, 'Students')
@@ -47,6 +47,7 @@ def test_auditor_success(cursor):
     audit = Auditor(cursor, 'GCRP.json', student_filter='"Student ID" in (12116)')
     assert audit.run_audit() == [{"'RP 500','RP 504'": 'True',
                                   "'RP 525'": 'True',
+                                  'Course in Progress': 'RP 699.01',
                                   'Last Term': 'Spring 2022',
                                   'MinElectivesStrategy': 'True',
                                   'MultiCStrategy': 'True',

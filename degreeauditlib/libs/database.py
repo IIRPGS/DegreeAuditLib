@@ -74,13 +74,15 @@ def create_cursor(conn: Connection) -> Cursor:
 
 
 # noinspection PyArgumentList
-def create_tables(conn: Connection, excel_file: str) -> None:
+def create_tables(conn: Connection, excel_file: str,
+                  student_columns=['Name', 'Last Term', 'Total Credits', 'Course in Progress', ]) -> None:
     """
     Creates the tables students and grades in the SQLite database.
     :param conn: Connection to database
     :param excel_file: NetStride data file
+    :param student_columns: Column names to be included in creating the student table
     :return: None
     """
     all_data = pd.read_excel(excel_file, index_col=14)
-    create_table(conn, all_data.loc[:, ['Name', 'Last Term', 'Total Credits', ]], 'students')
+    create_table(conn, all_data.loc[:, student_columns], 'students')
     create_table(conn, create_grade_data(all_data), 'grades')
