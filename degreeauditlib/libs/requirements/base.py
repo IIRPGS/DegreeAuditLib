@@ -1,5 +1,6 @@
 import importlib.metadata
 import importlib.resources as res
+from importlib.resources import files
 import json
 import os.path
 from pathlib import Path
@@ -38,22 +39,22 @@ class ProgramRequirement(BaseModel):
         # The strategy class must exist and any parameters must exist be assigned to the same key from the requirements
         # file with _params at the end of the name.
         requirement_lookup = {"required_courses": CourseStrategy,
-                              "required_courses_params": [res.path('degreeauditlib.strategy', 'course_strategy.json'),
+                              "required_courses_params": [files('degreeauditlib.strategy').joinpath('course_strategy.json').resolve(),
                                                           self.required_courses],
                               "min_electives": MinElectivesStrategy,
-                              "min_electives_params": [res.path('degreeauditlib.strategy', 'min_electives_strategy.json'),
+                              "min_electives_params": [files('degreeauditlib.strategy').joinpath('min_electives_strategy.json').resolve(),
                                                        self.required_courses,
                                                        self.min_electives],
                               "one_c": OneCStrategy,
-                              "one_c_params": [res.path('degreeauditlib.strategy', 'one_c_strategy.json')],
+                              "one_c_params": [files('degreeauditlib.strategy').joinpath('one_c_strategy.json').resolve()],
                               "multi_c": MultiCStrategy,
-                              "multi_c_params": [res.path('degreeauditlib.strategy', 'multi_c_strategy.json')],
+                              "multi_c_params": [files('degreeauditlib.strategy').joinpath('multi_c_strategy.json').resolve()],
                               "required_electives": CourseStrategy,
-                              "required_electives_params": [res.path('degreeauditlib.strategy', 'course_strategy.json'),
+                              "required_electives_params": [files('degreeauditlib.strategy').joinpath('course_strategy.json').resolve(),
                                                             self.required_electives],
                               "min_600_level_electives": Min600LevelElectivesStrategy,
                               "min_600_level_electives_params": [
-                                  res.path('degreeauditlib.strategy', 'six_hundred_level_electives.json'),
+                                  files('degreeauditlib.strategy').joinpath('six_hundred_level_electives.json').resolve(),
                                   self.required_courses, self.min_600_level_electives]
                               }
 
@@ -63,7 +64,6 @@ class ProgramRequirement(BaseModel):
             if attr in requirement_lookup and self.__dict__[attr]:
                 # Creating the object of the classes provided in the requirement_lookup.
                 requirements.append(requirement_lookup[attr](*requirement_lookup[f"{attr}_params"]))
-
         return requirements
 
 
@@ -76,11 +76,12 @@ def load_requirements(file: str) -> ProgramRequirement:
     if not file.endswith('.json'):
         file = file + '.json'
 
-    files = res.contents('degreeauditlib.requirement')
-    if file not in files:
+    res_files = [resource.name for resource in files('degreeauditlib.requirement').iterdir() if resource.is_file()]
+    if file not in res_files:
         verify_json_file(file)
 
-    programs_raw = json.load(res.open_text('degreeauditlib.requirement', file))
+    json_file = files('degreeauditlib.requirement').joinpath(file).open('r')
+    programs_raw = json.load(json_file)
     return ProgramRequirement(**programs_raw)
 
 
